@@ -1,0 +1,5 @@
+btc_node:
+  rpc_user: someuser
+  rpc_password: pleasechangemenow!
+  disablewallet: 1
+  maxconnections: 250
