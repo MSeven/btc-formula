@@ -8,18 +8,6 @@ bitcoin-pkg:
     - require:
       - pkgrepo: bitcoin-repo
 
-btc-supervisor-pkg:
-  pkg:
-    - name: supervisor
-    - installed
-  service:
-    - name: supervisor
-    - running
-    - enable: True
-    - watch:
-      - pkg: supervisor
-      - file: btc-supervisor-conf
-
 bitcoin-user:
   user.present:
       - name: bitcoinuser
@@ -29,7 +17,7 @@ bitcoin-user:
 
 /home/bitcoinuser/.bitcoin/bitcoin.conf:
   file.managed:
-    - source: salt://btc-node/bitcoin.conf
+    - source: salt://btc_node/bitcoin.conf
     - user: bitcoinuser
     - group: bitcoinuser
     - mode: 600
@@ -38,15 +26,22 @@ bitcoin-user:
     - require:
       - user: bitcoin-user
 
-btc-supervisor-conf:
+btc-upstart-conf:
   file.managed:
-    - name: /etc/supervisor/conf.d/bitcoin.conf
-    - source: salt://btc-node/btc_supervisor.conf
+    - name: /etc/init/bitcoind.conf
+    - source: salt://btc_node/btc_upstart.conf
     - require:
       - user: bitcoin-user
 
-supervisorctl_reload:
+btc-upstart-reload:
   cmd.wait:
-    - name: supervisorctl reload
+    - name: initctl reload-configuration
     - watch:
-      - file: btc-supervisor-conf
+      - file: btc-upstart-conf
+
+btc-service:
+  service.running:
+    - name: bitcoind
+    - require:
+      - pkg: bitcoind
+      - file: /etc/init/bitcoind.conf
