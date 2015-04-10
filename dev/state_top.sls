@@ -1,3 +1,3 @@
 base:
   'btc-node-debug':
-    - btc-node
+    - btc_node
