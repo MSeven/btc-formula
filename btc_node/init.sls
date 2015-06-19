@@ -41,7 +41,7 @@ btc-upstart-reload:
 
 btc-systemd-conf:
   file.managed:
-    - name: /lib/systemd/system/bitcoin.service
+    - name: /lib/systemd/system/bitcoind.service
     - source: salt://btc_node/btc_systemd.service
     - require:
       - user: bitcoin-user
