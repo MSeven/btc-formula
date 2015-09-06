@@ -26,19 +26,6 @@ bitcoin-user:
     - require:
       - user: bitcoin-user
 
-btc-upstart-conf:
-  file.managed:
-    - name: /etc/init/bitcoind.conf
-    - source: salt://btc_node/btc_upstart.conf
-    - require:
-      - user: bitcoin-user
-
-btc-upstart-reload:
-  cmd.wait:
-    - name: initctl reload-configuration
-    - watch:
-      - file: btc-upstart-conf
-
 btc-systemd-conf:
   file.managed:
     - name: /lib/systemd/system/bitcoind.service
@@ -51,4 +38,4 @@ btc-service:
     - name: bitcoind
     - require:
       - pkg: bitcoind
-      - file: /etc/init/bitcoind.conf
+      - file: /lib/systemd/system/bitcoind.service
